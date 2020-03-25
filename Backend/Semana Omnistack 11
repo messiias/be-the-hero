@@ -1,0 +1,4 @@
+Semana Omnistack 11:
+	npm init -y (Inicia o node js)
+	npx create-react-app 'Nome do arquivo' (Cria o arquivo sem necessariamente instalá-lo no computador, baseado no react native).
+	npm start (Inicia o react)
