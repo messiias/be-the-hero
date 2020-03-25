@@ -4,15 +4,16 @@ module.exports = {
     async index(request, response){ // Lista todos os incidentes
         const { page = 1} = request.query;
 
-        const [count] = await connection('incidents').count();
+        const [count] = await connection('incidents').count(); //Vai percorrer toda lista e contar e esse valor será armazenado em um array
 
         const incidents = await connection('incidents')
-            .join('ongs', 'ongs.id', '=', 'incidents.ong_id')
-            .limit(5)
-            .offset((page -1) * 5)
+            .join('ongs', 'ongs.id', '=', 'incidents.ong_id')//Irá comparar o ID do sistema com o ID que será recebido do front-end
+            .limit(5)//Irá limitar em 5 casos por página
+            .offset((page -1) * 5)//Faz com que cada página liste no mínimo 5 casos
             .select(['incidents.*', 'ongs.name', 'ongs.email', 'ongs.whatsapp', 'ongs.city', 'ongs.uf']);
+            //Irá retornar todo o incidents os nomes das ongs, emails...
 
-        response.header('X-Total-Count', count['count(*)']);
+        response.header('X-Total-Count', count['count(*)']);//Retornará a quantidade de casos
 
         return response.json(incidents);
     },
@@ -40,7 +41,7 @@ module.exports = {
         const incident = await connection('incidents')
             .where('id', id)
             .select('ong_id')
-            .first();
+            .first();//Irá pegar o primeiro caso
         if (incident.ong_id != ong_id){
             return response.status(401).json({ error: 'Operation not permited.'});
         }
